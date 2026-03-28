@@ -19,7 +19,13 @@ sudo cp target/release/mixtuur /usr/local/bin/
 
 ## Install as library
 
-Add to your `Cargo.toml`:
+Run the following Cargo command in your project directory:
+
+```bash
+cargo add mixtuur
+```
+
+Or add the following line to your `Cargo.toml`:
 
 ```toml
 mixtuur = "0.1.1"
