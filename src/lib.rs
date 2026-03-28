@@ -40,6 +40,9 @@ pub mod cli;
 /// Circle of Fifths palette and HSV colour helpers.
 pub mod color;
 
+/// Direct palette export to Cubase's `UserPreferences.xml`.
+pub mod cubase;
+
 /// Degree symbols, degree names, harmonic function labels, and comment
 /// strings for in-scale and chromatic notes.
 pub mod degree;

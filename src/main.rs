@@ -17,6 +17,7 @@
 
 use anyhow::{Result, anyhow};
 use clap::Parser;
+use colored::Colorize;
 
 use mixtuur::cli::Cli;
 use mixtuur::pitch::Pitch;
@@ -34,5 +35,13 @@ fn main() -> Result<()> {
     })?;
 
     print_colors(tonic, cli.scale.as_scale(), cli.explain);
+
+    if cli.push
+        && let Err(e) = mixtuur::cubase::push_to_cubase(tonic, cli.scale.as_scale())
+    {
+        eprintln!("{} {:#}", "Error:".red().bold(), e);
+        std::process::exit(1);
+    }
+
     Ok(())
 }

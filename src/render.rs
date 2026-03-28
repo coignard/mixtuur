@@ -17,7 +17,7 @@
 
 use colored::Colorize;
 
-use crate::color::{COF_COLORS, ghost, hsv_to_rgb, rgb_to_hsv};
+use crate::color::{get_pitch_hsv, hsv_to_rgb};
 use crate::degree::{build_comment, interval_to_degree_symbol};
 use crate::note::build_note_names;
 use crate::pitch::Pitch;
@@ -61,26 +61,14 @@ pub fn print_colors(tonic: Pitch, scale: &Scale, explain: bool) {
 
     for i in 0u8..12 {
         let interval = (i + 12 - tonic.semitone) % 12;
-        let in_scale = scale.intervals.contains(&interval);
         let name = &note_names[i as usize];
 
-        // Map interval → CoF position → base colour.
-        let cof_pos = (u32::from(interval) * 7 % 12) as usize;
-        let (br, bg, bb) = COF_COLORS[cof_pos];
-        let base_hsv = rgb_to_hsv(br, bg, bb);
-        let base_h = base_hsv.hue.into_positive_degrees().round() as u16;
+        let (render_hsv, in_scale) = get_pitch_hsv(i, tonic, scale);
+        let (dot_r, dot_g, dot_b) = hsv_to_rgb(render_hsv);
 
-        let (dot_r, dot_g, dot_b, render_s, render_v) = if in_scale {
-            let s = (base_hsv.saturation * 100.0).round() as u8;
-            let v = (base_hsv.value * 100.0).round() as u8;
-            (br, bg, bb, s, v)
-        } else {
-            let g = ghost(base_hsv);
-            let (gr, gg, gb) = hsv_to_rgb(g);
-            let s = (g.saturation * 100.0).round() as u8;
-            let v = (g.value * 100.0).round() as u8;
-            (gr, gg, gb, s, v)
-        };
+        let base_h = render_hsv.hue.into_positive_degrees().round() as u16;
+        let render_s = (render_hsv.saturation * 100.0).round() as u8;
+        let render_v = (render_hsv.value * 100.0).round() as u8;
 
         let dot_char = if interval == 0 {
             "▶"

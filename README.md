@@ -22,7 +22,7 @@ sudo cp target/release/mixtuur /usr/local/bin/
 Add to your `Cargo.toml`:
 
 ```toml
-mixtuur = "0.1.0"
+mixtuur = "0.1.1"
 ```
 
 ## Usage

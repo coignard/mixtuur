@@ -17,6 +17,9 @@
 
 use palette::{Hsv, IntoColor, Srgb};
 
+use crate::pitch::Pitch;
+use crate::scale::Scale;
+
 // Malinowski maps the artist's colour wheel onto the circle of fifths.
 // Adjacent fifths are adjacent hues; the tonic (I) is blue.
 //
@@ -61,6 +64,26 @@ pub fn hsv_to_rgb(hsv: Hsv) -> (u8, u8, u8) {
 pub fn ghost(mut hsv: Hsv) -> Hsv {
     hsv.saturation *= 0.3;
     hsv
+}
+
+/// Returns the HSV colour and in-scale flag for an absolute semitone index.
+///
+/// `absolute_semitone` is 0-11 (C ... B), independent of the tonic.
+/// The interval relative to `tonic` is derived here, mapped to its
+/// Circle-of-Fifths position, and the base colour is desaturated via
+/// [`ghost`] when the note is outside `scale`.
+pub fn get_pitch_hsv(absolute_semitone: u8, tonic: Pitch, scale: &Scale) -> (Hsv, bool) {
+    let interval = (absolute_semitone + 12 - tonic.semitone) % 12;
+    let in_scale = scale.intervals.contains(&interval);
+    let cof_pos = (u32::from(interval) * 7 % 12) as usize;
+    let (br, bg, bb) = COF_COLORS[cof_pos];
+    let base_hsv = rgb_to_hsv(br, bg, bb);
+
+    if in_scale {
+        (base_hsv, true)
+    } else {
+        (ghost(base_hsv), false)
+    }
 }
 
 #[cfg(test)]

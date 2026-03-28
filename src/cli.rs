@@ -100,4 +100,8 @@ pub struct Cli {
     /// Show harmonic function labels for every pitch.
     #[arg(long)]
     pub explain: bool,
+
+    /// Push the generated palette directly to Cubase's UserPreferences.xml
+    #[arg(long)]
+    pub push: bool,
 }
