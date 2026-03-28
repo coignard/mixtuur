@@ -1,0 +1,37 @@
+[package]
+name = "mixtuur"
+version = "0.1.0"
+authors = [
+    "René Coignard <contact@renecoignard.com>"
+]
+edition = "2024"
+rust-version = "1.94"
+license = "GPL-3.0-or-later"
+description = "Harmonic pitch colour generator for Cubase"
+homepage = "https://coignard.org/mixtuur"
+repository = "https://github.com/coignard/mixtuur"
+readme = "README.md"
+keywords = ["music", "cubase"]
+categories = ["command-line-utilities", "multimedia::audio"]
+exclude = [".github/*"]
+
+[lib]
+name = "mixtuur"
+path = "src/lib.rs"
+
+[[bin]]
+name = "mixtuur"
+path = "src/main.rs"
+
+[dependencies]
+clap = { version = "4.6.0", features = ["derive"] }
+anyhow = "1.0.102"
+colored = "3.1.1"
+palette = "0.7.6"
+
+[profile.release]
+strip = true
+lto = true
+codegen-units = 1
+panic = "abort"
+opt-level = 3
